@@ -14,10 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build and push Docker to Heroku
-        uses: akhileshns/heroku-example@main
+        uses: manchen07/heroku-example@main
         with:
           # this is the Heroku app name you already set up in dashboard
-          heroku_app_name: shiny-example
+          heroku_app_name: rshiny-example
           # app directory needs to be set relative to root of repo
           appdir: "."
           # secrets need to be added to the GitHub repo settings
