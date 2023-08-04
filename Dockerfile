@@ -15,27 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # we need remotes and renv
-RUN install2.r -e remotes renv
-
-# create non root user
-RUN addgroup --system app \
-    && adduser --system --ingroup app app
-
-# switch over to the app user home
-WORKDIR /home/app
-
-COPY ./renv.lock .
-RUN Rscript -e "options(renv.consent = TRUE);renv::restore(lockfile = '/home/app/renv.lock', repos = c(CRAN = 'https://cloud.r-project.org'), library = '/usr/local/lib/R/site-library', prompt = FALSE)"
-RUN rm -f renv.lock
-
-# copy everything inside the app folder
-COPY app .
-
-# permissions
-RUN chown app:app -R /home/app
-
-# change user
-USER app
+RUN install2.r --error remotes BH R6 Rcpp base64enc commonmark crayon digest fastmap glue htmltools httpuv intrval jsonlite later magrittr mime promises rlang shiny sourcetools withr xtable
 
 # EXPOSE can be used for local testing, not supported in Heroku's container runtime
 EXPOSE 8080
@@ -44,4 +24,4 @@ EXPOSE 8080
 ENV PORT=8080
 
 # command we want to run
-CMD ["R", "-e", "shiny::runApp('/home/app', host = '0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"]
+CMD ["R", "-e", "shiny::runApp('/app', host = '0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"]
